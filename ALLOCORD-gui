@@ -5,7 +5,6 @@ local ProfilePicture = Instance.new("ImageLabel")
 local UsernameLabel = Instance.new("TextLabel")
 local CloseButton = Instance.new("TextButton")
 local AllocordTitle = Instance.new("TextLabel")
-local WelcomeBanner = Instance.new("Frame") -- The sliding banner
 local OpenButton = Instance.new("TextButton") -- The draggable button to open the GUI
 
 -- Create the ScreenGui and add it to the player's PlayerGui
@@ -67,20 +66,6 @@ CloseButton.TextScaled = true
 CloseButton.Font = Enum.Font.SourceSans
 CloseButton.BackgroundColor3 = Color3.new(0.5, 0.5, 0.5)
 
--- Create the WelcomeBanner and add it to the ScreenGui
-WelcomeBanner.Parent = ScreenGui
-WelcomeBanner.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
-WelcomeBanner.Position = UDim2.new(1, 0, 0.5, -25) -- Start off-screen on the right
-WelcomeBanner.Size = UDim2.new(0, 200, 0, 50)
-WelcomeBanner.AnchorPoint = Vector2.new(1, 0.5) -- Anchor it from the right
-local WelcomeText = Instance.new("TextLabel", WelcomeBanner) -- Create the text label inside the banner
-WelcomeText.BackgroundTransparency = 1
-WelcomeText.Size = UDim2.new(1, 0, 1, 0)
-WelcomeText.Font = Enum.Font.SourceSansBold
-WelcomeText.Text = "Welcome to ALLO!"
-WelcomeText.TextColor3 = Color3.new(1, 1, 1)
-WelcomeText.TextScaled = true
-
 -- Create the OpenButton and add it to the ScreenGui
 OpenButton.Parent = ScreenGui
 OpenButton.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
@@ -91,28 +76,13 @@ OpenButton.TextColor3 = Color3.new(1, 1, 1)
 OpenButton.TextScaled = true
 OpenButton.Visible = false -- Initially hidden
 
--- Function to animate the WelcomeBanner sliding in
-local function slideInBanner()
-    WelcomeBanner:TweenPosition(UDim2.new(0.75, 0, 0.5, -25), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.5, true) -- Slide in
-end
-
--- Function to animate the WelcomeBanner sliding out
-local function slideOutBanner()
-    WelcomeBanner:TweenPosition(UDim2.new(1, 0, 0.5, -25), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.5, true) -- Slide out
-end
-
 -- Function to show the OpenButton
 local function showOpenButton()
     OpenButton.Visible = true
 end
 
--- Call the slide in animation
-slideInBanner()
-
 -- Event listener for the CloseButton click
 CloseButton.MouseButton1Click:Connect(function()
-    slideOutBanner() -- Slide out when closing
-    wait(0.5) -- Wait for slide out animation to finish
     Frame.Visible = false -- Hide the main frame
     showOpenButton() -- Show the OpenButton
 end)
@@ -120,7 +90,6 @@ end)
 -- Event listener for the OpenButton click
 OpenButton.MouseButton1Click:Connect(function()
     Frame.Visible = true -- Show the main frame again
-    slideInBanner() -- Slide the banner back in
     OpenButton.Visible = false -- Hide the OpenButton
 end)
 
@@ -155,7 +124,7 @@ end
 -- Make the OpenButton draggable
 makeDraggable(OpenButton)
 
--- Optional: Show ProfilePicture and UsernameLabel after animation
-wait(0.5) -- Delay to ensure animation is finished
+-- Optional: Show ProfilePicture and UsernameLabel after a short delay
+wait(0.5) -- Delay to ensure GUI initialization
 ProfilePicture.Visible = true
 UsernameLabel.Visible = true
