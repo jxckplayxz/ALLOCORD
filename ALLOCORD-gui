@@ -5,7 +5,8 @@ local ProfilePicture = Instance.new("ImageLabel")
 local UsernameLabel = Instance.new("TextLabel")
 local CloseButton = Instance.new("TextButton")
 local AllocordTitle = Instance.new("TextLabel")
-local AchievementLabel = Instance.new("TextLabel")
+local WelcomeBanner = Instance.new("Frame") -- The sliding banner
+local OpenButton = Instance.new("TextButton") -- The draggable button to open the GUI
 
 -- Create the ScreenGui and add it to the player's PlayerGui
 ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
@@ -66,37 +67,95 @@ CloseButton.TextScaled = true
 CloseButton.Font = Enum.Font.SourceSans
 CloseButton.BackgroundColor3 = Color3.new(0.5, 0.5, 0.5)
 
--- Create the AchievementLabel and add it to the Frame
-AchievementLabel.Parent = Frame
-AchievementLabel.BackgroundTransparency = 1
-AchievementLabel.Position = UDim2.new(0.5, -150, 0, 100) -- Position below the title
-AchievementLabel.Size = UDim2.new(0, 300, 0, 20)
-AchievementLabel.Font = Enum.Font.SourceSans
-AchievementLabel.Text = "Achievement Unlocked: Welcome to ALLO!"
-AchievementLabel.TextColor3 = Color3.new(1, 1, 1)
-AchievementLabel.TextScaled = true
-AchievementLabel.Visible = false -- Initially hidden
+-- Create the WelcomeBanner and add it to the ScreenGui
+WelcomeBanner.Parent = ScreenGui
+WelcomeBanner.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+WelcomeBanner.Position = UDim2.new(1, 0, 0.5, -25) -- Start off-screen on the right
+WelcomeBanner.Size = UDim2.new(0, 200, 0, 50)
+WelcomeBanner.AnchorPoint = Vector2.new(1, 0.5) -- Anchor it from the right
+local WelcomeText = Instance.new("TextLabel", WelcomeBanner) -- Create the text label inside the banner
+WelcomeText.BackgroundTransparency = 1
+WelcomeText.Size = UDim2.new(1, 0, 1, 0)
+WelcomeText.Font = Enum.Font.SourceSansBold
+WelcomeText.Text = "Welcome to ALLO!"
+WelcomeText.TextColor3 = Color3.new(1, 1, 1)
+WelcomeText.TextScaled = true
 
--- Function to animate the Frame
-local function animateFrame()
-    Frame.Size = UDim2.new(0, 0, 0, 0) -- Start with a size of 0
-    Frame.Position = UDim2.new(0.5, 0, 0.5, 0) -- Center the frame
-    Frame:TweenSize(UDim2.new(0, 700, 0, 400), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 1, true) -- Animate to full size
-    wait(1) -- Wait for animation to finish
-    AchievementLabel.Visible = true -- Show achievement label
-    AchievementLabel.TextTransparency = 1 -- Start with transparent text
-    AchievementLabel:TweenTextTransparency(0, Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 1, true) -- Fade in the text
+-- Create the OpenButton and add it to the ScreenGui
+OpenButton.Parent = ScreenGui
+OpenButton.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
+OpenButton.Position = UDim2.new(1, -60, 0.5, -25) -- Start in the same position as the WelcomeBanner
+OpenButton.Size = UDim2.new(0, 50, 0, 50)
+OpenButton.Text = "Open"
+OpenButton.TextColor3 = Color3.new(1, 1, 1)
+OpenButton.TextScaled = true
+OpenButton.Visible = false -- Initially hidden
+
+-- Function to animate the WelcomeBanner sliding in
+local function slideInBanner()
+    WelcomeBanner:TweenPosition(UDim2.new(0.75, 0, 0.5, -25), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.5, true) -- Slide in
 end
 
--- Call the animation function
-animateFrame()
+-- Function to animate the WelcomeBanner sliding out
+local function slideOutBanner()
+    WelcomeBanner:TweenPosition(UDim2.new(1, 0, 0.5, -25), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.5, true) -- Slide out
+end
+
+-- Function to show the OpenButton
+local function showOpenButton()
+    OpenButton.Visible = true
+end
+
+-- Call the slide in animation
+slideInBanner()
 
 -- Event listener for the CloseButton click
 CloseButton.MouseButton1Click:Connect(function()
-    Frame:Destroy()
+    slideOutBanner() -- Slide out when closing
+    wait(0.5) -- Wait for slide out animation to finish
+    Frame.Visible = false -- Hide the main frame
+    showOpenButton() -- Show the OpenButton
 end)
 
+-- Event listener for the OpenButton click
+OpenButton.MouseButton1Click:Connect(function()
+    Frame.Visible = true -- Show the main frame again
+    slideInBanner() -- Slide the banner back in
+    OpenButton.Visible = false -- Hide the OpenButton
+end)
+
+-- Function to make the OpenButton draggable
+local function makeDraggable(button)
+    local dragging, dragInput, startPos, startPosButton
+
+    button.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            startPos = button.Position
+            startPosButton = input.Position
+            
+            -- Connect InputChanged to update the button's position while dragging
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+
+    -- Update position of the button while dragging
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
+        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+            local delta = input.Position - startPosButton
+            button.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end)
+end
+
+-- Make the OpenButton draggable
+makeDraggable(OpenButton)
+
 -- Optional: Show ProfilePicture and UsernameLabel after animation
-wait(1) -- Delay to ensure animation is finished
+wait(0.5) -- Delay to ensure animation is finished
 ProfilePicture.Visible = true
 UsernameLabel.Visible = true
