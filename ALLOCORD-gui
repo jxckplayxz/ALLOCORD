@@ -13,8 +13,8 @@ ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 -- Create the Frame and add it to the ScreenGui
 Frame.Parent = ScreenGui
 Frame.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
-Frame.Position = UDim2.new(0.5, -100, 0.5, -150)
-Frame.Size = UDim2.new(0, 300, 0, 300)
+Frame.Position = UDim2.new(0.5, -100, 0.5, -100)
+Frame.Size = UDim2.new(0, 500, 0, 500)
 Frame.AnchorPoint = Vector2.new(0.5, 0.5) -- Set anchor point to center for scaling
 
 -- Create the AllocordTitle and add it to the Frame
