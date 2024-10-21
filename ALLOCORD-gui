@@ -1,130 +1,29 @@
-local ScreenGui = Instance.new("ScreenGui")
-local Frame = Instance.new("Frame")
-local Title = Instance.new("TextLabel")
-local ProfilePicture = Instance.new("ImageLabel")
-local UsernameLabel = Instance.new("TextLabel")
-local CloseButton = Instance.new("TextButton")
-local AllocordTitle = Instance.new("TextLabel")
-local OpenButton = Instance.new("TextButton") -- The draggable button to open the GUI
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
 
--- Create the ScreenGui and add it to the player's PlayerGui
-ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+local Window = Rayfield:CreateWindow({
+   Name = "Rayfield Example Window",
+   LoadingTitle = "Rayfield Interface Suite",
+   LoadingSubtitle = "by Sirius",
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = nil, -- Create a custom folder for your hub/game
+      FileName = "ALLO"
+   },
+   Discord = {
+      Enabled = false,
+      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ABCD would be ABCD
+      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+   },
+   KeySystem = false, -- Set this to true to use our key system
+   KeySettings = {
+      Title = "ALLO",
+      Subtitle = "Key System",
+      Note = "No method of obtaining the key is provided",
+      FileName = "Key", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+      Key = {"ALLOCORD"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22,ALLOCORD,secretmember,inf")
+   }
+})
 
--- Create the Frame and add it to the ScreenGui
-Frame.Parent = ScreenGui
-Frame.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
-Frame.Position = UDim2.new(0.5, 750, 0.5, -350)
-Frame.Size = UDim2.new(0, 500, 0, 500)
-Frame.AnchorPoint = Vector2.new(0.5, 0.5) -- Set anchor point to center for scaling
-
--- Create the AllocordTitle and add it to the Frame
-AllocordTitle.Parent = Frame
-AllocordTitle.BackgroundTransparency = 1
-AllocordTitle.Position = UDim2.new(0.5, -100, 0, 0)
-AllocordTitle.Size = UDim2.new(0, 200, 0, 50)
-AllocordTitle.Font = Enum.Font.SourceSansBold
-AllocordTitle.Text = "ALLOCORD"
-AllocordTitle.TextColor3 = Color3.new(1, 1, 1)
-AllocordTitle.TextScaled = true
-
--- Create the Title and add it to the Frame
-Title.Parent = Frame
-Title.BackgroundTransparency = 1
-Title.Position = UDim2.new(0, 0, 0, 75)
-Title.Size = UDim2.new(1, 0, 0, 20)
-Title.Font = Enum.Font.SourceSans
-Title.Text = "Welcome"
-Title.TextColor3 = Color3.new(1, 1, 1)
-Title.TextScaled = true
-
--- Create the ProfilePicture and add it to the Frame
-ProfilePicture.Parent = Frame
-ProfilePicture.BackgroundTransparency = 1
-ProfilePicture.Position = UDim2.new(0, 0, 1, 0)
-ProfilePicture.Size = UDim2.new(0, 50, 0, 50)
-ProfilePicture.Image = "rbxassetid://0" -- Replace with your profile picture asset ID
-ProfilePicture.Visible = false -- Set ProfilePicture to be invisible
-
--- Create the UsernameLabel and add it to the Frame
-UsernameLabel.Parent = Frame
-UsernameLabel.BackgroundTransparency = 1
-UsernameLabel.Position = UDim2.new(0, 0, 0, 125)
-UsernameLabel.Size = UDim2.new(0, 100, 0, 20)
-UsernameLabel.Font = Enum.Font.SourceSans
-UsernameLabel.Text = game.Players.LocalPlayer.Name
-UsernameLabel.TextColor3 = Color3.new(1, 1, 1)
-UsernameLabel.TextScaled = true
-UsernameLabel.Visible = false -- Set UsernameLabel to be invisible
-
--- Create the CloseButton and add it to the Frame
-CloseButton.Parent = Frame
-CloseButton.Position = UDim2.new(1, -50, 0, 0)
-CloseButton.Size = UDim2.new(0, 50, 0, 50)
-CloseButton.Text = "Close"
-CloseButton.TextColor3 = Color3.new(1, 1, 1)
-CloseButton.TextScaled = true
-CloseButton.Font = Enum.Font.SourceSans
-CloseButton.BackgroundColor3 = Color3.new(0.5, 0.5, 0.5)
-
--- Create the OpenButton and add it to the ScreenGui
-OpenButton.Parent = ScreenGui
-OpenButton.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
-OpenButton.Position = UDim2.new(1, -60, 1, -60) -- Position in the bottom right corner
-OpenButton.Size = UDim2.new(0, 50, 0, 50)
-OpenButton.Text = "Open"
-OpenButton.TextColor3 = Color3.new(1, 1, 1)
-OpenButton.TextScaled = true
-OpenButton.Visible = false -- Initially hidden
-
--- Function to show the OpenButton
-local function showOpenButton()
-    OpenButton.Visible = true
-end
-
--- Event listener for the CloseButton click
-CloseButton.MouseButton1Click:Connect(function()
-    Frame.Visible = false -- Hide the main frame
-    showOpenButton() -- Show the OpenButton
-end)
-
--- Event listener for the OpenButton click
-OpenButton.MouseButton1Click:Connect(function()
-    Frame.Visible = true -- Show the main frame again
-    OpenButton.Visible = false -- Hide the OpenButton
-end)
-
--- Function to make the OpenButton draggable
-local function makeDraggable(button)
-    local dragging, dragInput, startPos, startPosButton
-
-    button.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            dragging = true
-            startPos = button.Position
-            startPosButton = input.Position
-            
-            -- Connect InputChanged to update the button's position while dragging
-            input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then
-                    dragging = false
-                end
-            end)
-        end
-    end)
-
-    -- Update position of the button while dragging
-    game:GetService("UserInputService").InputChanged:Connect(function(input)
-        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
-            local delta = input.Position - startPosButton
-            button.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-        end
-    end)
-end
-
--- Make the OpenButton draggable
-makeDraggable(OpenButton)
-
--- Optional: Show ProfilePicture and UsernameLabel after a short delay
-wait(0.5) -- Delay to ensure GUI initialization
-ProfilePicture.Visible = true
-UsernameLabel.Visible = true
+local Tab = Window:CreateTab("basic", 4483362458) -- game, Image
