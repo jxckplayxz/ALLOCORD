@@ -5,7 +5,6 @@ local ProfilePicture = Instance.new("ImageLabel")
 local UsernameLabel = Instance.new("TextLabel")
 local CloseButton = Instance.new("TextButton")
 local AllocordTitle = Instance.new("TextLabel")
-local KeyInput = Instance.new("TextBox")
 
 -- Create the ScreenGui and add it to the player's PlayerGui
 ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
@@ -15,7 +14,6 @@ Frame.Parent = ScreenGui
 Frame.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
 Frame.Position = UDim2.new(0.5, -400, 0.5, -150)
 Frame.Size = UDim2.new(0, 700, 0, 400)
-Frame.Visible = false -- Hide the Frame initially
 
 -- Create the AllocordTitle and add it to the Frame
 AllocordTitle.Parent = Frame
@@ -66,32 +64,12 @@ CloseButton.TextScaled = true
 CloseButton.Font = Enum.Font.SourceSans
 CloseButton.BackgroundColor3 = Color3.new(0.5, 0.5, 0.5)
 
--- Create the KeyInput and add it to the Frame
-KeyInput.Parent = Frame
-KeyInput.Position = UDim2.new(0.5, -100, 0.5, -50)
-KeyInput.Size = UDim2.new(0, 200, 0, 50)
-KeyInput.Text = ""
-KeyInput.TextColor3 = Color3.new(1, 1, 1)
-KeyInput.TextScaled = true
-KeyInput.ClearTextOnFocus = false
-KeyInput.Font = Enum.Font.SourceSans
-KeyInput.PlaceholderText = "Enter Key"
+-- Event listener for the Frame position changes
+Frame.Changed:Connect(function()
+    UsernameLabel.Position = Frame.Position + UDim2.new(0, 0, 0, 125)
+end)
 
 -- Event listener for the CloseButton click
 CloseButton.MouseButton1Click:Connect(function()
     Frame:Destroy()
-end)
-
--- Event listener for the KeyInput text input
-KeyInput.Changed:Connect(function(input)
-    -- Check if the input matches the correct key
-    if input == "mySecretKey" then
-        -- Show the GUI if the key is correct
-        Frame.Visible = true
-    end
-end)
-
--- Event listener for the Frame position changes
-Frame.Changed:Connect(function()
-    UsernameLabel.Position = Frame.Position + UDim2.new(0, 0, 0, 125)
 end)
