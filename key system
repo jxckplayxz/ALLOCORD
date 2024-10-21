@@ -1,24 +1,27 @@
--- Define the correct key
-local correctKey = "KEY_tester" -- Replace this with the actual key
+-- Define the correct key and key URL
+local correctKey = "KEY_8d21e901l881t671a" -- Replace this with the actual key
+local keyURL = "https://delta-supports.static.domains/allocord.html" -- Replace with your key URL
 
 -- Create Screen GUI
 local ScreenGui = Instance.new("ScreenGui")
 local Frame = Instance.new("Frame")
 local TextBox = Instance.new("TextBox")
-local Button = Instance.new("TextButton")
+local CheckButton = Instance.new("TextButton")
+local GetKeyButton = Instance.new("TextButton")
 local StatusLabel = Instance.new("TextLabel")
 
 -- Parent objects
 ScreenGui.Parent = game.CoreGui -- Make sure it runs in CoreGui to display properly
 Frame.Parent = ScreenGui
 TextBox.Parent = Frame
-Button.Parent = Frame
+CheckButton.Parent = Frame
+GetKeyButton.Parent = Frame
 StatusLabel.Parent = Frame
 
 -- Frame properties
 Frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-Frame.Size = UDim2.new(0, 300, 0, 150)
-Frame.Position = UDim2.new(0.5, -150, 0.5, -75)
+Frame.Size = UDim2.new(0, 300, 0, 180)
+Frame.Position = UDim2.new(0.5, -150, 0.5, -90)
 
 -- TextBox properties
 TextBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -29,30 +32,41 @@ TextBox.Font = Enum.Font.SourceSans
 TextBox.TextSize = 20
 TextBox.Text = ""
 
--- Button properties
-Button.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
-Button.Size = UDim2.new(0, 100, 0, 30)
-Button.Position = UDim2.new(0.5, -50, 0, 80)
-Button.Text = "Check Key"
-Button.Font = Enum.Font.SourceSans
-Button.TextSize = 18
+-- CheckButton properties
+CheckButton.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
+CheckButton.Size = UDim2.new(0, 100, 0, 30)
+CheckButton.Position = UDim2.new(0.5, -50, 0, 80)
+CheckButton.Text = "Check Key"
+CheckButton.Font = Enum.Font.SourceSans
+CheckButton.TextSize = 18
+
+-- GetKeyButton properties (Button for getting key)
+GetKeyButton.BackgroundColor3 = Color3.fromRGB(50, 150, 200)
+GetKeyButton.Size = UDim2.new(0, 100, 0, 30)
+GetKeyButton.Position = UDim2.new(0.5, -50, 0, 120)
+GetKeyButton.Text = "Get Key"
+GetKeyButton.Font = Enum.Font.SourceSans
+GetKeyButton.TextSize = 18
 
 -- StatusLabel properties
 StatusLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 StatusLabel.Size = UDim2.new(0, 300, 0, 30)
-StatusLabel.Position = UDim2.new(0, 0, 0, 120)
+StatusLabel.Position = UDim2.new(0, 0, 0, 150)
 StatusLabel.Font = Enum.Font.SourceSans
 StatusLabel.TextSize = 18
 StatusLabel.Text = ""
 StatusLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
 
--- Function to check the key when button is clicked
-Button.MouseButton1Click:Connect(function()
+-- Function to check the key when CheckButton is clicked
+CheckButton.MouseButton1Click:Connect(function()
     local enteredKey = TextBox.Text
 
     if enteredKey == correctKey then
         StatusLabel.Text = "Key is correct!"
         StatusLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
+
+        -- Hide the key entry GUI
+        ScreenGui.Enabled = false
 
         -- Execute the script if key is correct
         loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/jxckplayxz/ALLOCORD/refs/heads/main/ALLOCORD-gui"))()
@@ -60,4 +74,11 @@ Button.MouseButton1Click:Connect(function()
         StatusLabel.Text = "Incorrect key, try again."
         StatusLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
     end
+end)
+
+-- Function for GetKeyButton to copy key URL to clipboard
+GetKeyButton.MouseButton1Click:Connect(function()
+    setclipboard(keyURL) -- Copies the key URL to the clipboard
+    StatusLabel.Text = "Key URL copied to clipboard!"
+    StatusLabel.TextColor3 = Color3.fromRGB(0, 255, 255)
 end)
