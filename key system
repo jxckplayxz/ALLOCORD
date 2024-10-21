@@ -11,7 +11,7 @@ local GetKeyButton = Instance.new("TextButton")
 local StatusLabel = Instance.new("TextLabel")
 
 -- Parent objects
-ScreenGui.Parent = game.CoreGui -- Make sure it runs in CoreGui to display properly
+ScreenGui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui") -- Use PlayerGui instead of CoreGui
 Frame.Parent = ScreenGui
 TextBox.Parent = Frame
 CheckButton.Parent = Frame
@@ -40,7 +40,7 @@ CheckButton.Text = "Check Key"
 CheckButton.Font = Enum.Font.SourceSans
 CheckButton.TextSize = 18
 
--- GetKeyButton properties (Button for getting key)
+-- GetKeyButton properties
 GetKeyButton.BackgroundColor3 = Color3.fromRGB(50, 150, 200)
 GetKeyButton.Size = UDim2.new(0, 100, 0, 30)
 GetKeyButton.Position = UDim2.new(0.5, -50, 0, 120)
@@ -68,8 +68,14 @@ CheckButton.MouseButton1Click:Connect(function()
         -- Hide the key entry GUI
         ScreenGui.Enabled = false
 
-        -- Execute the script if key is correct
-        loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/jxckplayxz/ALLOCORD/refs/heads/main/ALLOCORD-gui"))()
+        -- Try to execute the script if key is correct
+        local success, result = pcall(function()
+            loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/jxckplayxz/ALLOCORD/refs/heads/main/ALLOCORD-gui"))()
+        end)
+
+        if not success then
+            warn("Failed to execute script:", result)
+        end
     else
         StatusLabel.Text = "Incorrect key, try again."
         StatusLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
@@ -78,7 +84,13 @@ end)
 
 -- Function for GetKeyButton to copy key URL to clipboard
 GetKeyButton.MouseButton1Click:Connect(function()
-    setclipboard(keyURL) -- Copies the key URL to the clipboard
-    StatusLabel.Text = "Key URL copied to clipboard!"
-    StatusLabel.TextColor3 = Color3.fromRGB(0, 255, 255)
+    local success, result = pcall(setclipboard, keyURL)
+
+    if success then
+        StatusLabel.Text = "Key URL copied to clipboard!"
+        StatusLabel.TextColor3 = Color3.fromRGB(0, 255, 255)
+    else
+        StatusLabel.Text = "Failed to copy to clipboard. Visit: " .. keyURL
+        StatusLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
+    end
 end)
