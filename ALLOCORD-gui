@@ -69,7 +69,7 @@ CloseButton.BackgroundColor3 = Color3.new(0.5, 0.5, 0.5)
 -- Create the OpenButton and add it to the ScreenGui
 OpenButton.Parent = ScreenGui
 OpenButton.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
-OpenButton.Position = UDim2.new(1, -60, 0.5, -25) -- Start in the same position as the WelcomeBanner
+OpenButton.Position = UDim2.new(1, -60, 1, -60) -- Position in the bottom right corner
 OpenButton.Size = UDim2.new(0, 50, 0, 50)
 OpenButton.Text = "Open"
 OpenButton.TextColor3 = Color3.new(1, 1, 1)
